@@ -15,6 +15,12 @@ LINE = "I'm skipping the meeting about meeting overload \u2014 my absence is the
 
 
 def main() -> int:
+    # Self-gate, mirroring the bounty gate: the entry is only valid as
+    # UTF-8 text of 1 to 200 characters, not only whitespace. Fail loudly
+    # instead of writing an entry the judge would never see.
+    if not (1 <= len(LINE) <= 200) or not LINE.strip():
+        print("error: LINE must be 1-200 non-blank characters", file=sys.stderr)
+        return 1
     out_dir = os.environ.get("MAKEFUN_OUTPUT_DIR", "/output")
     os.makedirs(out_dir, exist_ok=True)
     path = os.path.join(out_dir, "entry.txt")
